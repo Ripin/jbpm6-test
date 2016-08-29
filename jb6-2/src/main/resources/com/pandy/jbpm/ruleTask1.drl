@@ -1,0 +1,8 @@
+package com.pandy.jbpm;
+
+rule "Hello World Rule" ruleflow-group "Print"
+when
+	eval( true )
+then
+	System.out.println("一个Drools测试例子: Hello World Rule");
+end

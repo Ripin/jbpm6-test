@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:jbpm="http://drools.org/schema/drools-spring"
+    xmlns:kie="http://drools.org/schema/kie-spring"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://drools.org/schema/drools-spring
+    	http://drools.org/schema/drools-spring-1.3.0.xsd
+    	http://www.springframework.org/schema/tx
+    	http://www.springframework.org/schema/tx/spring-tx.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd
+    	http://www.springframework.org/schema/aop
+    	http://www.springframework.org/schema/aop/spring-aop.xsd
+    	http://www.springframework.org/schema/util
+    	http://www.springframework.org/schema/util/spring-util.xsd
+    	http://drools.org/schema/kie-spring
+    	http://drools.org/schema/kie-spring-2.0.0.xsd">
+    	
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    
+    <bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="driverUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="alias" value="${proxool.alias}"/>
+        <property name="houseKeepingTestSql" value="${proxool.houseKeepingTestSql}"/>
+        <property name="prototypeCount" value="${proxool.prototypeCount}"/>
+        <property name="minimumConnectionCount" value="${proxool.minimumConnectionCount}"/>
+        <property name="maximumConnectionCount" value="${proxool.maximumConnectionCount}"/>
+    </bean>
+    
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="persistenceUnitName" value="jpa" />
+    </bean>
+    
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    
+    <!-- <jbpm:kbase id="kbase">
+        <jbpm:resources>
+            <jbpm:resource type="BPMN2" source="classpath:net/hjfax/jbpm/sample.bpmn" />
+        </jbpm:resources>
+    </jbpm:kbase>
+    <jbpm:ksession id="ksession" type="stateful" kbase="kbase">
+        <jbpm:configuration>
+            <jbpm:jpa-persistence>
+                <jbpm:transaction-manager ref="transactionManager" />
+                <jbpm:entity-manager-factory ref="entityManagerFactory" />
+            </jbpm:jpa-persistence>
+        </jbpm:configuration>
+    </jbpm:ksession> -->
+    <bean id="userService" class="net.hjfax.service.impl.UserServiceImpl">
+        <property name="userDAO" ref="userDAO" />
+        <property name="ksession" ref="ksession" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="kbase" ref="kbase" />
+    </bean>
+    <kie:kmodule id="jbpm_module">
+        <kie:kbase name="kbase" packages="net.hjfax.jbpm">
+            <kie:ksession name="ksession">
+                <kie:configuration>
+                    <kie:jpa-persistence>
+                        <kie:transaction-manager ref="transactionManager" />
+                        <kie:entity-manager-factory ref="entityManagerFactory" />
+                    </kie:jpa-persistence>
+                </kie:configuration>
+            </kie:ksession>
+        </kie:kbase>
+    </kie:kmodule>
+    <bean id="kiePostProcessor" class="org.kie.spring.KModuleBeanFactoryPostProcessor" />
+    
+    <!-- <bean id="runtimeEnvironmentBuilder" class="org.kie.api.runtime.manager.RuntimeEnvironmentBuilder" factory-method="newClasspathKmoduleDefaultBuilder">
+        <constructor-arg value="kbase" />
+        <constructor-arg value="ksession" />
+    </bean> -->
+    
+    <!-- <bean id="sample" factory-method="newClassPathResource" class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg value="sample.bpmn" />
+    </bean>
+    
+    <bean id="runtimeEnvironment" class="org.kie.spring.factorybeans.RuntimeEnvironmentFactoryBean">
+        <property name="type" value="DEFAULT" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="assets">
+            <map>
+                <entry key-ref="sample">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2" />
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="runtimeManager" class="org.kie.spring.factorybeans.RuntimeManagerFactoryBean" destroy-method="close">
+        <property name="identifier" value="spring-rm" />
+        <property name="runtimeEnvironment" ref="runtimeEnvironment" />
+    </bean>
+    
+    <bean id="logService" class="org.jbpm.process.audit.JPAAuditLogService">
+        <constructor-arg ref="entityManagerFactory" />
+    </bean> -->
+    
+    <!-- <context:annotation-config />
+    <tx:annotation-driven transaction-manager="transactionManager"/> -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="list*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config>
+        <aop:pointcut id="serviceMethods" expression="execution(* net.hjfax.service.impl.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
+    </aop:config>
+</beans>

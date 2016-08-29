@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jbpm="http://drools.org/schema/drools-spring"
+       xmlns:kie="http://drools.org/schema/kie-spring" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://drools.org/schema/drools-spring
+    	http://drools.org/schema/drools-spring-1.3.0.xsd
+    	http://www.springframework.org/schema/tx
+    	http://www.springframework.org/schema/tx/spring-tx.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd
+    	http://www.springframework.org/schema/aop
+    	http://www.springframework.org/schema/aop/spring-aop.xsd
+    	http://www.springframework.org/schema/util
+    	http://www.springframework.org/schema/util/spring-util.xsd
+    	http://drools.org/schema/kie-spring
+    	http://drools.org/schema/kie-spring-2.0.0.xsd">
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!-- <bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+        <property name="driver" value="${jdbc.driver}" />
+        <property name="driverUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="alias" value="${proxool.alias}" />
+        <property name="houseKeepingTestSql" value="${proxool.houseKeepingTestSql}" />
+        <property name="prototypeCount" value="${proxool.prototypeCount}" />
+        <property name="minimumConnectionCount" value="${proxool.minimumConnectionCount}" />
+        <property name="maximumActiveTime" value="3600000" />
+    </bean> -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!-- <property name="alias" value="${proxool.alias}" />
+        <property name="houseKeepingTestSql" value="${proxool.houseKeepingTestSql}" />
+        <property name="prototypeCount" value="${proxool.prototypeCount}" />
+        <property name="minimumConnectionCount" value="${proxool.minimumConnectionCount}" />
+        <property name="maximumActiveTime" value="3600000" /> -->
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceUnitName" value="jpa"/>
+    </bean>
+    <!--  start Spring & JBPM6 -->
+    <!-- <bean id="btmConfig" factory-method="getConfiguration"
+        class="bitronix.tm.TransactionManagerServices">
+    </bean> -->
+    <!-- <bean id="BitronixTransactionManager" factory-method="getTransactionManager"
+        class="bitronix.tm.TransactionManagerServices" depends-on="btmConfig"
+        destroy-method="shutdown" /> -->
+    <!-- <bean id="jbpmTxManager"
+        class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="BitronixTransactionManager" />
+        <property name="userTransaction" ref="BitronixTransactionManager" />
+    </bean> -->
+    <!--  =======================================================================================================Def process  -->
+    <bean id="userGroupCallback" class="com.pandy.JBPMUserGroupCallback">
+        <property name="organizationalEntityDAO" ref="organizationalEntityDAO"/>
+    </bean>
+    <bean id="Evaluation" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/Evaluation.bpmn</value>
+        </constructor-arg>
+    </bean>
+    <bean id="scriptTask1" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/scriptTask1.bpmn</value>
+        </constructor-arg>
+    </bean>
+    <bean id="scriptTask2" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/scriptTask2.bpmn2</value>
+        </constructor-arg>
+    </bean>
+    <bean id="userTask1" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/userTask1.bpmn</value>
+        </constructor-arg>
+    </bean>
+    <bean id="userTask2" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/userTask2.bpmn2</value>
+        </constructor-arg>
+    </bean>
+    <bean id="ruleTask1" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/ruleTask1.bpmn2</value>
+        </constructor-arg>
+    </bean>
+    <bean id="ruleTask1Drl" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/ruleTask1.drl</value>
+        </constructor-arg>
+    </bean>
+    <bean id="ruleTask2" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/ruleTask2.bpmn</value>
+        </constructor-arg>
+    </bean>
+    <bean id="ruleTask2Drl" factory-method="newClassPathResource"
+          class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>com/pandy/jbpm/ruleTask2.drl</value>
+        </constructor-arg>
+    </bean>
+    <!--  =======================================================================================================Def runtimeEnvironment  -->
+    <bean id="runtimeEnvironment"
+          class="org.kie.spring.factorybeans.RuntimeEnvironmentFactoryBean">
+        <!--
+        如果是默认的，就会调用MvelUserGroupCallbackImpl这个方法，会去找task_core包下面的UserGroupsAssignmentsOne.mvel文件来设定用户和组，
+        要设定为EMPTYP,
+        才会调用自己的UserGroupCallback -->
+        <!--<property name="type" value="DEFAULT" />-->
+        <property name="type" value="EMPTY"/>
+        <property name="userGroupCallback" ref="userGroupCallback"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="assets">
+            <!--  =======================================================================================================Init process  -->
+            <map>
+                <!--<entry key-ref="Evaluation">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2" />
+                </entry>-->
+                <entry key-ref="scriptTask1">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2" />
+                </entry>
+                <entry key-ref="scriptTask2">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2" />
+                </entry>
+                <entry key-ref="userTask1">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2"/>
+                </entry>
+                <entry key-ref="userTask2">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2"/>
+                </entry>
+                <entry key-ref="ruleTask1">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2"/>
+                </entry>
+                <entry key-ref="ruleTask1Drl">
+                    <util:constant static-field="org.kie.api.io.ResourceType.DRL"/>
+                </entry>
+                <entry key-ref="ruleTask2">
+                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2"/>
+                </entry>
+                <entry key-ref="ruleTask2Drl">
+                    <util:constant static-field="org.kie.api.io.ResourceType.DRL"/>
+                </entry>
+            </map>
+        </property>
+        <property name="taskService" ref="taskService"/>
+    </bean>
+    <bean id="runtimeManager" class="org.kie.spring.factorybeans.RuntimeManagerFactoryBean"
+          destroy-method="close">
+        <property name="identifier" value="spring-rm"/>
+        <property name="runtimeEnvironment" ref="runtimeEnvironment"/>
+    </bean>
+    <bean id="logService" class="org.jbpm.process.audit.JPAAuditLogService">
+        <constructor-arg>
+            <ref bean="entityManagerFactory"/>
+        </constructor-arg>
+    </bean>
+    <bean id="taskQueryService" class="org.jbpm.services.task.impl.TaskQueryServiceImpl"></bean>
+    <bean id="taskContentService" class="org.jbpm.services.task.impl.TaskContentServiceImpl"></bean>
+    <!--       源码会返回org.jbpm.services.task.impl.command.CommandBasedTaskService的实现类-->
+    <bean id="taskService" class="org.kie.spring.factorybeans.TaskServiceFactoryBean"
+          destroy-method="close">
+        <!--      如果不设定就是用MvelUserGroupCallbackImpl -->
+        <property name="userGroupCallback" ref="userGroupCallback"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="listeners">
+            <list>
+                <bean class="org.jbpm.services.task.audit.JPATaskLifeCycleEventListener"/>
+                <bean class="org.jbpm.services.task.events.DefaultTaskEventListener"/>
+                <bean class="org.jbpm.services.task.lifecycle.listeners.BAMTaskEventListener"/>
+                <!--      如果不设定ExternalTaskEventListener,会导致一个User Task无法往下一个节点走的问题 -->
+                <bean class="org.jbpm.services.task.wih.ExternalTaskEventListener"/>
+            </list>
+        </property>
+    </bean>
+    <!--  start Spring & JBPM6 -->
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean
+            class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+    <bean
+            class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+    <bean id="jbpm6Service" class="com.pandy.service.impl.Jbpm6ServiceImpl">
+        <!-- <property name="ksession" ref="ksession" />
+        <property name="kbase" ref="kbase" /> -->
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="runtimeManager" ref="runtimeManager"/>
+        <property name="taskService" ref="taskService"/>
+        <property name="taskQueryService" ref="taskQueryService"/>
+        <property name="taskContentService" ref="taskContentService"/>
+        <property name="organizationalEntityDAO" ref="organizationalEntityDAO"/>
+    </bean>
+    <!-- <kie:kmodule id="jbpm_module">
+        <kie:kbase name="kbase" packages="com.pandy.jbpm">
+            <kie:ksession name="ksession">
+                <kie:configuration>
+                    <kie:jpa-persistence>
+                        <kie:transaction-manager ref="transactionManager" />
+                        <kie:entity-manager-factory ref="entityManagerFactory" />
+                    </kie:jpa-persistence>
+                </kie:configuration>
+            </kie:ksession>
+        </kie:kbase>
+    </kie:kmodule> -->
+    <bean id="kiePostProcessor" class="org.kie.spring.KModuleBeanFactoryPostProcessor"/>
+    <!-- <context:annotation-config /> <tx:annotation-driven transaction-manager="transactionManager"/> -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="list*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="serviceMethods"
+                      expression="execution(* com.pandy.service.impl.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
+    </aop:config>
+</beans>

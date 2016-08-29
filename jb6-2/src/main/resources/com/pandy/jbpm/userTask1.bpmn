@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.activiti.org/test"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="null" structureRef="String" />
+
+  <process processType="Private" isExecutable="true" id="com.sample.bpmn.userTask1" name="简单的人工任务例子 BPMN" tns:packageName="defaultPackage" tns:version="1.0" >
+
+    <!-- process variables -->
+    <property id="name" itemSubjectRef="null"/>
+    <property id="age" itemSubjectRef="null"/>
+    <property id="content" itemSubjectRef="null"/>
+    <property id="var1" itemSubjectRef="null"/>
+
+    <!-- nodes -->
+    <startEvent id="_2" name="StartEvent"  isInterrupting="false"/>
+    <endEvent id="_3" name="EndEvent" />
+    <scriptTask id="_4" name="ScriptTask1" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("=========================================================Start");
+System.out.println("var1="+var1); 
+kcontext.setVariable("var1", "");
+kcontext.setVariable("name", "");
+kcontext.setVariable("age", "");
+kcontext.setVariable("content", "");
+
+System.out.println("Show Variables, Before Perameter Mapping");
+String name_ = (String)kcontext.getVariable("name"); 
+String age_ = (String)kcontext.getVariable("age"); 
+String content_ = (String)kcontext.getVariable("content"); 
+System.out.println("Name: " + name_);
+System.out.println("Age: " + age_);
+System.out.println("Content: " + content_);</script>
+    </scriptTask>
+    <scriptTask id="_5" name="ScriptTask2" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("+++++++++++++++++++++++++++++++++++++++ScriptTask2");
+System.out.println("var1="+var1); 
+kcontext.setVariable("var1", "Script Task2 access to Var1");
+
+System.out.println("+------------+");
+System.out.println("Show Variables, After Perameter Mapping");
+String name_ = (String)kcontext.getVariable("name"); 
+String age_ = (String)kcontext.getVariable("age"); 
+String content_ = (String)kcontext.getVariable("content"); 
+System.out.println("Name: " + name_);
+System.out.println("Age: " + age_);
+System.out.println("Content: " + content_);</script>
+    </scriptTask>
+    <userTask id="_6" name="UserTask 1" >
+      <extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println("@@@@@@@@@@@@@@@@@Entry UserTask 1");</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println("@@@@@@@@@@@@@@@@@Exit UserTask 1");</tns:script>
+        </tns:onExit-script>
+      </extensionElements>
+      <ioSpecification>
+        <dataInput id="_6_input_ageInput" name="input_age" />
+        <dataInput id="_6_input_contentInput" name="input_content" />
+        <dataInput id="_6_input_nameInput" name="input_name" />
+        <dataInput id="_6_NodeNameInput" name="NodeName" />
+        <dataOutput id="_6_output_contentOutput" name="output_content" />
+        <dataOutput id="_6_output_nameOutput" name="output_name" />
+        <dataOutput id="_6_output_ageOutput" name="output_age" />
+        <inputSet>
+          <dataInputRefs>_6_input_ageInput</dataInputRefs>
+          <dataInputRefs>_6_input_contentInput</dataInputRefs>
+          <dataInputRefs>_6_input_nameInput</dataInputRefs>
+          <dataInputRefs>_6_NodeNameInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_6_output_contentOutput</dataOutputRefs>
+          <dataOutputRefs>_6_output_nameOutput</dataOutputRefs>
+          <dataOutputRefs>_6_output_ageOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>age</sourceRef>
+        <targetRef>_6_input_ageInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>content</sourceRef>
+        <targetRef>_6_input_contentInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>name</sourceRef>
+        <targetRef>_6_input_nameInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_6_NodeNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">UserTask 1</from>
+          <to xsi:type="tFormalExpression">_6_NodeNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_6_output_contentOutput</sourceRef>
+        <targetRef>content</targetRef>
+      </dataOutputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_6_output_nameOutput</sourceRef>
+        <targetRef>name</targetRef>
+      </dataOutputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_6_output_ageOutput</sourceRef>
+        <targetRef>age</targetRef>
+      </dataOutputAssociation>
+      <potentialOwner>
+        <resourceAssignmentExpression>
+          <formalExpression>pandy</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+    <userTask id="_jbpm-unique-0" name="User Task 2" >
+      <extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println("@@@@@@@@@@@@@@@@@Entry User Task 2");</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>System.out.println("@@@@@@@@@@@@@@@@@Exit User Task 2");</tns:script>
+        </tns:onExit-script>
+      </extensionElements>
+      <ioSpecification>
+        <dataInput id="_jbpm-unique-0_NodeNameInput" name="NodeName" />
+        <inputSet>
+          <dataInputRefs>_jbpm-unique-0_NodeNameInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>_jbpm-unique-0_NodeNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">User Task 2</from>
+          <to xsi:type="tFormalExpression">_jbpm-unique-0_NodeNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <potentialOwner>
+        <resourceAssignmentExpression>
+          <formalExpression>pyzheng</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+    <scriptTask id="_jbpm-unique-2" name="ScriptTask3" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("var1="+var1); 
+kcontext.setVariable("var1", "Script Task3 access to Var1");
+System.out.println("=========================================================End");</script>
+    </scriptTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_jbpm-unique-2-_3" sourceRef="_jbpm-unique-2" targetRef="_3" />
+    <sequenceFlow id="_2-_4" sourceRef="_2" targetRef="_4" />
+    <sequenceFlow id="_6-_5" sourceRef="_6" targetRef="_5" />
+    <sequenceFlow id="_4-_6" sourceRef="_4" targetRef="_6" />
+    <sequenceFlow id="_5-_jbpm-unique-0" sourceRef="_5" targetRef="_jbpm-unique-0" />
+    <sequenceFlow id="_jbpm-unique-0-_jbpm-unique-2" sourceRef="_jbpm-unique-0" targetRef="_jbpm-unique-2" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="com.sample.bpmn.userTask1" >
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="39" y="49" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="776" y="43" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="66" y="207" width="103" height="55" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="366" y="208" width="100" height="55" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_6" >
+        <dc:Bounds x="221" y="208" width="85" height="55" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_jbpm-unique-0" >
+        <dc:Bounds x="549" y="213" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_jbpm-unique-2" >
+        <dc:Bounds x="711" y="211" width="106" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_jbpm-unique-2-_3" >
+        <di:waypoint x="764" y="235" />
+        <di:waypoint x="800" y="67" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-_4" >
+        <di:waypoint x="63" y="73" />
+        <di:waypoint x="117" y="234" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6-_5" >
+        <di:waypoint x="263" y="235" />
+        <di:waypoint x="416" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_6" >
+        <di:waypoint x="117" y="234" />
+        <di:waypoint x="263" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5-_jbpm-unique-0" >
+        <di:waypoint x="416" y="235" />
+        <di:waypoint x="599" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_jbpm-unique-0-_jbpm-unique-2" >
+        <di:waypoint x="599" y="237" />
+        <di:waypoint x="764" y="235" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

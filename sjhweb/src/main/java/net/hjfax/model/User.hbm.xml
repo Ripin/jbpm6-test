@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN'
+        'http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd'>
+<hibernate-mapping>
+    <class name="net.hjfax.model.User" table="user">
+        <id name="id" column="id" length="4" type="long">
+            <generator class="native"/>
+        </id>
+        <property name="gender" column="gender" type="boolean"/>
+        <property name="name" column="name" type="string"/>
+        <property name="username" column="username" type="string"/>
+    </class>
+</hibernate-mapping>
