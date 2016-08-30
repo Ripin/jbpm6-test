@@ -4,23 +4,44 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 http://drools.org/schema/kie-spring http://drools.org/schema/kie-spring.xsd">
-    <beans profile="development">
-        <kie:kmodule id="test-kmodule">
-            <kie:kbase name="drl_kiesample" packages="drl_kiesample">
-                <kie:ksession name="ksession1" type="stateless">
-                    <kie:consoleLogger />
-                </kie:ksession>
-            </kie:kbase>
-        </kie:kmodule>
-        ...
-    </beans>
 
-    <beans profile="production">
-        <kie:kmodule id="test-kmodule">
-            <kie:kbase name="drl_kiesample" packages="drl_kiesample">
-                <kie:ksession name="ksession1" type="stateless"/>
-            </kie:kbase>
-        </kie:kmodule>
+    <bean id="mock-agenda-listener" class="mocks.MockAgendaEventListener"/>
+    <bean id="mock-rr-listener" class="mocks.MockRuleRuntimeEventListener"/>
+    <bean id="mock-process-listener" class="mocks.MockProcessEventListener"/>
 
-    </beans>
+    <kie:kstore id="kstore" /> <!-- provides KnowledgeStoreService implementation -->
+
+    <bean id="myEmf"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="ds" />
+        <property name="persistenceUnitName"
+                  value="org.drools.persistence.jpa.local" />
+    </bean>
+
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="myEmf" />
+    </bean>
+
+    <kie:kmodule id="persistence_module">
+        <kie:kbase name="drl_kiesample" packages="drl_kiesample">
+            <kie:ksession name="jpaSingleSessionCommandService">
+                <!--配置Listener-->
+                <kie:agendaEventListener ref="mock-agenda-listener"/>
+                <kie:processEventListener ref="mock-process-listener"/>
+                <kie:ruleRuntimeEventListener ref="mock-rr-listener"/>
+                <!--配置console日志-->
+                <kie:consoleLogger/>
+                <kie:configuration>
+                    <kie:jpa-persistence>
+                        <kie:transaction-manager ref="txManager"/>
+                        <kie:entity-manager-factory ref="myEmf"/>
+                    </kie:jpa-persistence>
+                </kie:configuration>
+            </kie:ksession>
+        </kie:kbase>
+    </kie:kmodule>
+
+    <bean id="kiePostProcessor"
+          class="org.kie.spring.KModuleBeanFactoryPostProcessor"/>
+
 </beans>
