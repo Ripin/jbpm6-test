@@ -8,7 +8,7 @@
   <!-- spring with jta -->
   <persistence-unit name="org.jbpm.persistence.spring.jta" transaction-type="JTA">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <jta-data-source>jdbc/jbpm-ds</jta-data-source>
+    <jta-data-source>java://comp/env/jbpm-ds</jta-data-source>
 
     <!--<mapping-file>META-INF/JBPMorm.xml</mapping-file>-->
     <mapping-file>META-INF/Taskorm.xml</mapping-file>
@@ -33,8 +33,6 @@
     <class>org.jbpm.services.task.impl.model.BooleanExpressionImpl</class>
     <class>org.jbpm.services.task.impl.model.CommentImpl</class>
     <class>org.jbpm.services.task.impl.model.DeadlineImpl</class>
-    <class>org.jbpm.services.task.impl.model.CommentImpl</class>
-    <class>org.jbpm.services.task.impl.model.DeadlineImpl</class>
     <class>org.jbpm.services.task.impl.model.DelegationImpl</class>
     <class>org.jbpm.services.task.impl.model.EscalationImpl</class>
     <class>org.jbpm.services.task.impl.model.GroupImpl</class>
@@ -50,11 +48,9 @@
     <class>org.jbpm.services.task.impl.model.UserImpl</class>
 
     <!-- 参照旧版新增待验证
-    <class>org.jbpm.services.task.audit.impl.model.TaskEventImpl</class>
     <class>org.jbpm.services.task.audit.impl.model.GroupAuditTaskImpl</class>
     <class>org.jbpm.services.task.impl.model.OrganizationalEntityImpl</class>
     <class>org.jbpm.services.task.audit.impl.model.HistoryAuditTaskImpl</class>
-    <class>org.jbpm.services.task.audit.impl.model.BAMTaskSummaryImpl</class>
     <class>org.jbpm.runtime.manager.impl.task.SynchronizedTaskService</class>
      -->
     <!-- 如果不设定ExternalTaskEventListener,会导致一个User Task无法往下一个节点走的问题 -->
@@ -69,7 +65,7 @@
 
     <properties>
       <property name="hibernate.max_fetch_depth" value="3"/>
-      <property name="hibernate.hbm2ddl.auto" value="update" />
+      <property name="hibernate.hbm2ddl.auto" value="create" />
       <property name="hibernate.show_sql" value="true" />
       <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
 

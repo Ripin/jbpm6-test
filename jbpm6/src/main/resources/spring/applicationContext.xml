@@ -27,7 +27,7 @@
     <!--流程图-->
     <import resource="classpath:spring/components/applicationContext-assets.xml" />
     <import resource="classpath:spring/components/applicationContext-bpm.xml"/>
-    <import resource="classpath:spring/components/applicationContext-humanTask.xml"/>
+    <!--<import resource="classpath:spring/components/applicationContext-humanTask.xml"/>-->
 
 	
 </beans> 

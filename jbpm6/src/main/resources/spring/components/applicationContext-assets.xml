@@ -9,7 +9,7 @@
 
   <bean id="sample" factory-method="newClassPathResource" class="org.kie.internal.io.ResourceFactory">
     <constructor-arg>
-      <value>processes/sample.bpmn</value>
+      <value>processes/Evaluation.bpmn</value>
     </constructor-arg>
   </bean>
 
