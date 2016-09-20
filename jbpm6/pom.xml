@@ -217,7 +217,7 @@
             <version>${oracle.version}</version>
         </dependency>
         <!--rest相关包-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.kie.remote</groupId>
             <artifactId>kie-services-remote</artifactId>
             <version>6.1.0.Final</version>
@@ -259,6 +259,12 @@
                     <groupId>org.scannotation</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>-->
+        <!-- 和jbpm6.1.0.Final所用的包不一样（对应kie-services-client） -->
+        <dependency>
+            <groupId>org.kie.remote</groupId>
+            <artifactId>kie-remote-client</artifactId>
+            <version>6.4.0.Final</version>
         </dependency>
 
     </dependencies>
