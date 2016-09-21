@@ -1,4 +1,4 @@
-package ins.bpm;
+package ins.bpm.rest;
 
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
