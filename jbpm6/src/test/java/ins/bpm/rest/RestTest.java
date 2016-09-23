@@ -38,7 +38,6 @@ public class RestTest {
         // Create KieSession and TaskService instances and use them
         KieSession ksession = engine.getKieSession();
         TaskService taskService = engine.getTaskService();
-
         // Each operation on a KieSession, TaskService or AuditLogService (client) instance
         // sends a request for the operation to the server side and waits for the response
         // If something goes wrong on the server side, the client will throw an exception.
@@ -52,7 +51,6 @@ public class RestTest {
         long procId = 43L;
 
         String taskUserId = "krisv";
-        taskService = engine.getTaskService();
         List<TaskSummary> tasks = taskService.getTasksAssignedAsPotentialOwner("krisv", "en-UK");
 
         long taskId = -1;
@@ -72,7 +70,7 @@ public class RestTest {
 
         // resultData can also just be null
         Map<String, Object> resultData = new HashMap<String, Object>();
-        resultData.put("Performance", "Very good!");
+        resultData.put("performance", "Very good!");
         taskService.complete(taskId, taskUserId, resultData);
     }
 

@@ -1,4 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<process-instance-response>
+    <process-id>evaluation</process-id>
+    <id>61</id>
+    <state>1</state>
+    <parentProcessInstanceId>0</parentProcessInstanceId>
+    <status>SUCCESS</status>
+    <url>/jbpm-console/rest/runtime/org.jbpm:Evaluation:1.1/process/evaluation/start</url>
+</process-instance-response>
+<process-definition>
+    <id>evaluation</id>
+    <name>Evaluation</name>
+    <version>1.1</version>
+    <package-name>Evaluation.src.main.resources</package-name>
+    <deployment-id>org.jbpm:Evaluation:1.1</deployment-id>
+    <forms/>
+    <variables>
+        <entry>
+            <key>reason</key>
+            <value>java.lang.String</value>
+        </entry>
+        <entry>
+            <key>performance</key>
+            <value>java.lang.String</value>
+        </entry>
+        <entry>
+            <key>employee</key>
+            <value>java.lang.String</value>
+        </entry>
+    </variables>
+</process-definition>
 <process-definition-list>
     <process-definition>
         <id>evaluation</id>
