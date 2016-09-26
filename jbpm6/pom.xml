@@ -217,55 +217,30 @@
             <version>${oracle.version}</version>
         </dependency>
         <!--rest相关包-->
-        <!--<dependency>
-            <groupId>org.kie.remote</groupId>
-            <artifactId>kie-services-remote</artifactId>
-            <version>6.1.0.Final</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jbpm-human-task-core</artifactId>
-                    <groupId>org.jbpm</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jbpm-human-task-jpa</artifactId>
-                    <groupId>org.jbpm</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>kie-api</artifactId>
-                    <groupId>org.kie</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>kie-internal</artifactId>
-                    <groupId>org.kie</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.kie.remote</groupId>
-            <artifactId>kie-services-client</artifactId>
-            <version>6.1.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>2.3.7.Final</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>scannotation</artifactId>
-                    <groupId>org.scannotation</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
-        <!-- 和jbpm6.1.0.Final所用的包不一样（对应kie-services-client） -->
+        <!--和jbpm6.1.0.Final所用的包不一样（对应kie-services-client） -->
         <dependency>
             <groupId>org.kie.remote</groupId>
             <artifactId>kie-remote-client</artifactId>
             <version>6.4.0.Final</version>
         </dependency>
+
+        <!--仅供参考，正式代码不使用！！查看官方完整版bpm组件使用的包-->
+        <!-- define drools BOM
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-bom</artifactId>
+            <type>pom</type>
+            <version>${version.org.drools}</version>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jbpm</groupId>
+            <artifactId>jbpm-bom</artifactId>
+            <type>pom</type>
+            <version>${version.org.jbpm}</version>
+            <scope>import</scope>
+        </dependency>
+        -->
 
     </dependencies>
 
